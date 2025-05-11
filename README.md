@@ -1,4 +1,3 @@
-
 # 🌐 Pack Calculator Frontend
 
 This is the frontend for the Pack Calculator app, built with **Vue 3** and **Vite**.  
@@ -12,7 +11,7 @@ It allows users to input the number of items and available pack sizes, then disp
 - Connects to a Go-based backend API
 - Responsive and simple UI
 - Axios for HTTP requests
-- Docker-ready
+- Docker-ready for production deployment
 
 ---
 
@@ -24,31 +23,38 @@ It allows users to input the number of items and available pack sizes, then disp
 npm install
 ```
 
-### 2. Run locally
+### 2. Run locally (for development)
 
 ```bash
 npm run dev
 ```
 
-It will be available at:  
+The app will be available at:  
 `http://localhost:5173`
 
-Make sure the API is running at `http://localhost:8080`
+Make sure the backend API is running at:  
+`http://localhost:8080`
 
 ---
 
-## 🐳 Docker Build
+## 🐳 Docker (Production Mode)
 
-This project is Dockerized and ready to run in production mode.
+Before building, make sure your `.env.production` file exists and contains the correct backend URL:
 
-### 1. Build and run
-
-```bash
-docker build -t pack-calculator-frontend .
-docker run -p 80:80 pack-calculator-frontend
+```env
+VITE_API_URL=http://54.91.1.171:8080
 ```
 
-It will serve the built frontend at `http://localhost`
+### Build and run:
+
+```bash
+docker rm -f pack-frontend
+docker build -t pack-frontend --build-arg BUILD_ENV=production .
+docker run -d -p 80:80 --name pack-frontend pack-frontend
+```
+
+The app will be live at:  
+🔗 `http://54.91.1.171/`
 
 ---
 
@@ -57,32 +63,37 @@ It will serve the built frontend at `http://localhost`
 ```
 src/
 ├── components/       # Vue components (e.g., CalculatorForm.vue)
-├── assets/           # Static images or styles
+├── views/            # Optional views (e.g., DocsView.vue)
 ├── App.vue           # Root component
-├── main.js           # App entry
+├── main.js           # App entry point
+
+public/
+├── openapi.yaml      # OpenAPI spec
+├── docs/
+│   ├── index.html    # Redoc viewer
+│   └── redoc.standalone.js
 ```
 
 ---
 
 ## 🌐 Connect to API
 
-Make sure your Axios requests target the correct backend address.  
-In development:
-```js
-http://localhost:8080/calculate
-```
+Make sure Axios connects to the correct backend endpoint.
 
-In production (Docker):
+### In production:
 ```js
-http://api:8080/calculate
-```
-
-```
-VITE_API_URL=http://localhost:8080
+VITE_API_URL=http://54.91.1.171:8080
 ```
 
 ---
 
-## 🧑‍💻 Author 
-Made by **Abdelrahman Tarek** using Vue 3 and Vite
+## 📘 API Documentation
+
+API docs are available at:  
+[`http://54.91.1.171/docs/index.html`](http://54.91.1.171/docs/index.html)
+
 ---
+
+## 🧑‍💻 Author
+
+Made by **Abdelrahman Tarek** using Vue 3 and Vite.
